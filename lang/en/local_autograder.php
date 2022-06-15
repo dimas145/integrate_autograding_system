@@ -23,3 +23,4 @@
  */
 
 $string['pluginname'] = 'Plugin to integrate moodle to advanced autograding system';
+$string['gitlab'] = 'GitLab';
