@@ -37,12 +37,16 @@ defined('MOODLE_INTERNAL') || die();
  * @return bool
  */
 function local_integrate_autograding_system_myprofile_navigation(tree $tree, $user, $iscurrentuser, $course) {
+    $config = get_config('local_integrate_autograding_system');
+
     // Create GitLab category.
     $categoryname = get_string('gitlab', 'local_integrate_autograding_system');
     $category = new core_user\output\myprofile\category('gitlab', $categoryname, 'contact');
     $tree->add_category($category);
 
-    $url = sprintf('http://localhost:5000/gitlab/auth?userId=%s', $user->id); // TODO
+    $url = get_string('urltemplate', 'local_integrate_autograding_system', 
+                        ['domain' => $config->bridge_service_domain,
+                         'endpoint' => sprintf('/gitlab/auth?userId=%s', $user->id)]);
     $node = new core_user\output\myprofile\node('gitlab', 'verify', 'Click here to verify', null, $url, null, null, 'editprofile');
     $tree->add_node($node);
 

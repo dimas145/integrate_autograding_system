@@ -22,10 +22,21 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Integrate moodle to advanced autograding system';
-$string['gitlab'] = 'GitLab';
-$string['manage'] = 'Manage Autograding System Integration';
-$string['bridgeservicedomain'] = 'Bridge Service Domain';
+defined('MOODLE_INTERNAL') || die();
 
-$string['bridgeservicedomaindefault'] = 'localhost:5000';
-$string['urltemplate'] = 'http://{$a->domain}{$a->endpoint}';
+if ($hassiteconfig) {
+    $ADMIN->add('localplugins', new admin_category('local_integrate_autograding_system_settings', new lang_string('pluginname', 'local_integrate_autograding_system')));
+    $settingspage = new admin_settingpage('managelocalintegrateautogradingsystem', new lang_string('manage', 'local_integrate_autograding_system'));
+
+    if ($ADMIN->fulltree) {
+        $settingspage->add(new admin_setting_configtext(
+            'local_integrate_autograding_system/bridge_service_domain',
+            new lang_string('bridgeservicedomain', 'local_integrate_autograding_system'),
+            null,
+            new lang_string('bridgeservicedomaindefault', 'local_integrate_autograding_system'),
+            PARAM_URL,
+        ));
+    }
+
+    $ADMIN->add('localplugins', $settingspage);
+}
