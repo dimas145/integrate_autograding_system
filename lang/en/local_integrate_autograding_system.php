@@ -17,10 +17,10 @@
 /**
  * Version metadata for the plugintype_pluginname plugin.
  *
- * @package   local_autograder
+ * @package   local_integrate_autograding_system
  * @copyright 2022, Dimas 13518069@std.stei.itb.ac.id
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Plugin to integrate moodle to advanced autograding system';
+$string['pluginname'] = 'Integrate moodle to advanced autograding system';
 $string['gitlab'] = 'GitLab';

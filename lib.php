@@ -17,7 +17,7 @@
 /**
  * Version metadata for the plugintype_pluginname plugin.
  *
- * @package   local_autograder
+ * @package   local_integrate_autograding_system
  * @copyright 2022, Dimas 13518069@std.stei.itb.ac.id
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -36,9 +36,9 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @return bool
  */
-function local_autograder_myprofile_navigation(tree $tree, $user, $iscurrentuser, $course) {
+function local_integrate_autograding_system_myprofile_navigation(tree $tree, $user, $iscurrentuser, $course) {
     // Create GitLab category.
-    $categoryname = get_string('gitlab', 'local_autograder');
+    $categoryname = get_string('gitlab', 'local_integrate_autograding_system');
     $category = new core_user\output\myprofile\category('gitlab', $categoryname, 'contact');
     $tree->add_category($category);
 

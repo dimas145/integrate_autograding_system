@@ -17,13 +17,13 @@
 /**
  * Version metadata for the plugintype_pluginname plugin.
  *
- * @package   local_autograder
+ * @package   local_integrate_autograding_system
  * @copyright 2022, Dimas 13518069@std.stei.itb.ac.id
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_autograder';
+$plugin->component = 'local_integrate_autograding_system';
 $plugin->version = 2022061500;
 $plugin->requires = 2020061500;
