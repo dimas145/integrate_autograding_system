@@ -38,6 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function local_integrate_autograding_system_myprofile_navigation(tree $tree, $user, $iscurrentuser, $course) {
     $config = get_config('local_integrate_autograding_system');
+    profile_load_data($user);
 
     // Create GitLab category.
     $categoryname = get_string('gitlab', 'local_integrate_autograding_system');
@@ -51,8 +52,61 @@ function local_integrate_autograding_system_myprofile_navigation(tree $tree, $us
     $node = new core_user\output\myprofile\node('gitlab', 'verify', 'Click here to verify', null, $url, null, null, 'editprofile');
     $tree->add_node($node);
 
-    $node = new core_user\output\myprofile\node('gitlab', 'name', 'gitlab', null, null, $user->username);  // TODO
+    $node = new core_user\output\myprofile\node('gitlab', 'name', get_string('gitlabusernamedesc', 'local_integrate_autograding_system'), null, null, $user->username);  // TODO
     $tree->add_node($node);
 
     return true;
+}
+
+function local_integrate_autograding_system_after_config() {
+    global $DB, $CFG;
+
+    require_once($CFG->dirroot . '/user/profile/index_category_form.php');
+    require_once($CFG->dirroot . '/user/profile/definelib.php');
+    require_once($CFG->dirroot . '/user/profile/field/text/define.class.php');
+    require_once($CFG->dirroot . '/user/profile/field/checkbox/define.class.php');
+
+    if ($DB->count_records('user_info_category', array('name' => get_string('gitlab', 'local_integrate_autograding_system'))) == 0) {
+        $categoryform = new category_form();
+
+        $data = new \stdClass();
+        $data->sortorder = $DB->count_records('user_info_category') + 1;
+        $data->name = get_string('gitlab', 'local_integrate_autograding_system');
+        $data->id = $DB->insert_record('user_info_category', $data, true);
+
+        $createdcategory = $DB->get_record('user_info_category', array('id' => $data->id));
+        \core\event\user_info_category_created::create_from_category($createdcategory)->trigger();
+
+        $profileclass = new \profile_define_text();
+        $data = (object) [
+            'shortname' => get_string('gitlabusername', 'local_integrate_autograding_system'),
+            'name' => get_string('gitlabusernamedesc', 'local_integrate_autograding_system'),
+            'datatype' => 'text',
+            'descriptionformat' => 1,
+            'categoryid' => $createdcategory->id,
+            'signup' => 0,
+            'forceunique' => 0,
+            'visible' => 2,
+            'locked' => 1,
+            'param1' => 30,
+            'param2' => 2048,
+        ];
+        $profileclass->define_save($data);
+
+        $profileclass = new \profile_define_checkbox();
+        $data = (object) [
+            'shortname' => get_string('isgitlabverified', 'local_integrate_autograding_system'),
+            'name' => get_string('isgitlabverifieddesc', 'local_integrate_autograding_system'),
+            'datatype' => 'checkbox',
+            'descriptionformat' => 1,
+            'categoryid' => $createdcategory->id,
+            'signup' => 0,
+            'forceunique' => 0,
+            'visible' => 2,
+            'locked' => 1,
+            'defaultdata' => 0,
+            'defaultdataformat' => 0,
+        ];
+        $profileclass->define_save($data);
+    }
 }
