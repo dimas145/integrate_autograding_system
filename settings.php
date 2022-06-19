@@ -36,6 +36,14 @@ if ($hassiteconfig) {
             new lang_string('bridgeservicedomaindefault', 'local_integrate_autograding_system'),
             PARAM_URL,
         ));
+
+        $settingspage->add(new admin_setting_configtext(
+            'local_integrate_autograding_system/bridge_service_port',
+            new lang_string('bridgeserviceport', 'local_integrate_autograding_system'),
+            null,
+            new lang_string('bridgeserviceportdefault', 'local_integrate_autograding_system'),
+            PARAM_URL,
+        ));
     }
 
     $ADMIN->add('localplugins', $settingspage);

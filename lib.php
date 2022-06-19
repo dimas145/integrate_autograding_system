@@ -46,7 +46,8 @@ function local_integrate_autograding_system_myprofile_navigation(tree $tree, $us
 
     $url = get_string('urltemplate', 'local_integrate_autograding_system', 
                         ['domain' => $config->bridge_service_domain,
-                         'endpoint' => sprintf('/gitlab/auth?userId=%s', $user->id)]);
+                         'port' => $config->bridge_service_port,
+                         'endpoint' => "/gitlab/auth?userId=$user->id"]);
     $node = new core_user\output\myprofile\node('gitlab', 'verify', 'Click here to verify', null, $url, null, null, 'editprofile');
     $tree->add_node($node);
 

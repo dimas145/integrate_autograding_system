@@ -26,6 +26,8 @@ $string['pluginname'] = 'Integrate moodle to advanced autograding system';
 $string['gitlab'] = 'GitLab';
 $string['manage'] = 'Manage Autograding System Integration';
 $string['bridgeservicedomain'] = 'Bridge Service Domain';
+$string['bridgeserviceport'] = 'Bridge Service Port';
 
-$string['bridgeservicedomaindefault'] = 'localhost:5000';
-$string['urltemplate'] = 'http://{$a->domain}{$a->endpoint}';
+$string['bridgeservicedomaindefault'] = 'bridge-service';
+$string['bridgeserviceportdefault'] = '8085';
+$string['urltemplate'] = 'http://{$a->domain}:{$a->endpoint}{$a->endpoint}';
