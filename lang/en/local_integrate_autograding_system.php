@@ -34,4 +34,4 @@ $string['bridgeserviceport'] = 'Bridge Service Port';
 
 $string['bridgeservicedomaindefault'] = 'bridge-service';
 $string['bridgeserviceportdefault'] = '8085';
-$string['urltemplate'] = 'http://{$a->domain}:{$a->endpoint}{$a->endpoint}';
+$string['urltemplate'] = 'http://{$a->domain}:{$a->port}{$a->endpoint}';
