@@ -43,14 +43,18 @@ class local_integrate_autograding_system_observer {
             $instance_id = $event->other['instanceid'];
             $instance = $DB->get_record('course_modules', array('instance' => $instance_id));
 
-            $url = get_string('urltemplate', 'local_integrate_autograding_system', 
-                                ['domain' => $config->bridge_service_domain,
-                                 'port' => $config->bridge_service_port,
-                                 'endpoint' => '/gitlab/createRepository']);
+            $url = get_string(
+                'urltemplate',
+                'local_integrate_autograding_system',
+                [
+                    'url' => $config->bridge_service_url,
+                    'endpoint' => '/gitlab/createRepository'
+                ]
+            );
             $data = array(
                 'courseId' => $event->courseid,
                 'activityId' => $instance->module,
-                'name'=> $name,
+                'name' => $name,
                 'instance' => $instance_id,
                 'gradingMethod' => 'MAXIMUM',       // TODO
                 'gradingPriority' => 'FIRST',       // TODO
@@ -61,13 +65,13 @@ class local_integrate_autograding_system_observer {
                 ],
             );
             $data_string = json_encode($data);
-            
+
             $curl->setHeader(array('Content-type: application/json'));
             $curl->setHeader(array('Accept: application/json', 'Expect:'));
             $response = $curl->post($url, $data_string);
             $response_json = json_decode($response);
 
-            if($response_json->success) {
+            if ($response_json->success) {
                 // TODO
             }
         }

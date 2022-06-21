@@ -29,9 +29,7 @@ $string['gitlabusernamedesc'] = 'GitLab Username';
 $string['isgitlabverified'] = 'isGitLabVerified';
 $string['isgitlabverifieddesc'] = 'GitLab Verified';
 $string['manage'] = 'Manage Autograding System Integration';
-$string['bridgeservicedomain'] = 'Bridge Service Domain';
-$string['bridgeserviceport'] = 'Bridge Service Port';
+$string['bridgeserviceurl'] = 'Bridge Service url';
 
-$string['bridgeservicedomaindefault'] = 'bridge-service';
-$string['bridgeserviceportdefault'] = '8085';
-$string['urltemplate'] = 'http://{$a->domain}:{$a->port}{$a->endpoint}';
+$string['bridgeserviceurldefault'] = 'http://localhost:8085';
+$string['urltemplate'] = '{$a->url}{$a->endpoint}';

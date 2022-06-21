@@ -44,10 +44,14 @@ function local_integrate_autograding_system_myprofile_navigation(tree $tree, $us
     $category = new core_user\output\myprofile\category('gitlab', $categoryname, 'contact');
     $tree->add_category($category);
 
-    $url = get_string('urltemplate', 'local_integrate_autograding_system', 
-                        ['domain' => $config->bridge_service_domain,
-                         'port' => $config->bridge_service_port,
-                         'endpoint' => "/gitlab/auth?userId=$user->id"]);
+    $url = get_string(
+        'urltemplate',
+        'local_integrate_autograding_system',
+        [
+            'url' => $config->bridge_service_url,
+            'endpoint' => "/gitlab/auth?userId=$user->id"
+        ]
+    );
     $node = new core_user\output\myprofile\node('gitlab', 'verify', 'Click here to verify', null, $url, null, null, 'editprofile');
     $tree->add_node($node);
 
