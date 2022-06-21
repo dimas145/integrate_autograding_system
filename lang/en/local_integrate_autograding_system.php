@@ -22,12 +22,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Integrate moodle to advanced autograding system';
+$string['pluginname'] = 'Integrate Moodle to Advanced Autograding System';
 $string['gitlab'] = 'GitLab';
 $string['gitlabusername'] = 'gitlabUsername';
 $string['gitlabusernamedesc'] = 'GitLab Username';
 $string['isgitlabverified'] = 'isGitLabVerified';
 $string['isgitlabverifieddesc'] = 'GitLab Verified';
+$string['servicename'] = 'integrate_autograding_system';
+$string['servicenamedesc'] = 'Moodle Integrate Autograding System Web Service';
 $string['manage'] = 'Manage Autograding System Integration';
 $string['bridgeserviceurl'] = 'Bridge Service url';
 

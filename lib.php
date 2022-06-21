@@ -26,6 +26,12 @@ use core_user\output\myprofile\tree;
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/user/profile/index_category_form.php');
+require_once($CFG->dirroot . '/user/profile/definelib.php');
+require_once($CFG->dirroot . '/user/profile/field/text/define.class.php');
+require_once($CFG->dirroot . '/user/profile/field/checkbox/define.class.php');
+require_once($CFG->dirroot . '/webservice/lib.php');
+
 /**
  * Add GitLab category and nodes to myprofile page.
  *
@@ -50,7 +56,7 @@ function local_integrate_autograding_system_myprofile_navigation(tree $tree, $us
         [
             'url' => $config->bridge_service_url,
             'endpoint' => "/gitlab/auth?userId=$user->id"
-        ]
+        ],
     );
     $node = new core_user\output\myprofile\node('gitlab', 'verify', 'Click here to verify', null, $url, null, null, 'editprofile');
     $tree->add_node($node);
@@ -61,12 +67,7 @@ function local_integrate_autograding_system_myprofile_navigation(tree $tree, $us
 function local_integrate_autograding_system_after_config() {
     global $DB, $CFG;
 
-    require_once($CFG->dirroot . '/user/profile/index_category_form.php');
-    require_once($CFG->dirroot . '/user/profile/definelib.php');
-    require_once($CFG->dirroot . '/user/profile/field/text/define.class.php');
-    require_once($CFG->dirroot . '/user/profile/field/checkbox/define.class.php');
-
-    if ($DB->count_records('user_info_category', array('name' => get_string('gitlab', 'local_integrate_autograding_system'))) == 0) {
+    if (!$DB->record_exists('user_info_category', array('name' => get_string('gitlab', 'local_integrate_autograding_system')))) {
         $data = new \stdClass();
         $data->sortorder = $DB->count_records('user_info_category') + 1;
         $data->name = get_string('gitlab', 'local_integrate_autograding_system');
@@ -107,5 +108,22 @@ function local_integrate_autograding_system_after_config() {
             'defaultdataformat' => 0,
         ];
         $profileclass->define_save($data);
+    }
+
+    if (!$DB->record_exists('external_services', array('shortname' => get_string('servicename', 'local_integrate_autograding_system')))) {
+        $webservicemanager = new \webservice();
+
+        $data = (object) [
+            'shortname' => get_string('servicename', 'local_integrate_autograding_system'),
+            'name' => get_string('servicenamedesc', 'local_integrate_autograding_system'),
+            'component' => get_string('pluginname', 'local_integrate_autograding_system'),
+            'enabled' => 1,
+            'restrictedusers' => 0,
+            'downloadfiles' => 0,
+            'uploadfiles' => 0,
+        ];
+        $serviceid = $webservicemanager->add_external_service($data);
+
+        $webservicemanager->add_external_function_to_service('core_user_update_users', $serviceid);
     }
 }
