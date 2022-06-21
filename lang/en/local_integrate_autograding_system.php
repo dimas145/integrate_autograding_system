@@ -25,7 +25,7 @@
 $string['pluginname'] = 'Integrate moodle to advanced autograding system';
 $string['gitlab'] = 'GitLab';
 $string['gitlabusername'] = 'gitlabUsername';
-$string['gitlabusernamedesc'] = 'Gitlab Username';
+$string['gitlabusernamedesc'] = 'GitLab Username';
 $string['isgitlabverified'] = 'isGitLabVerified';
 $string['isgitlabverifieddesc'] = 'GitLab Verified';
 $string['manage'] = 'Manage Autograding System Integration';

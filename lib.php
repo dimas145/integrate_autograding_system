@@ -38,7 +38,6 @@ defined('MOODLE_INTERNAL') || die();
  */
 function local_integrate_autograding_system_myprofile_navigation(tree $tree, $user, $iscurrentuser, $course) {
     $config = get_config('local_integrate_autograding_system');
-    profile_load_data($user);
 
     // Create GitLab category.
     $categoryname = get_string('gitlab', 'local_integrate_autograding_system');
@@ -50,9 +49,6 @@ function local_integrate_autograding_system_myprofile_navigation(tree $tree, $us
                          'port' => $config->bridge_service_port,
                          'endpoint' => "/gitlab/auth?userId=$user->id"]);
     $node = new core_user\output\myprofile\node('gitlab', 'verify', 'Click here to verify', null, $url, null, null, 'editprofile');
-    $tree->add_node($node);
-
-    $node = new core_user\output\myprofile\node('gitlab', 'name', get_string('gitlabusernamedesc', 'local_integrate_autograding_system'), null, null, $user->username);  // TODO
     $tree->add_node($node);
 
     return true;
@@ -67,8 +63,6 @@ function local_integrate_autograding_system_after_config() {
     require_once($CFG->dirroot . '/user/profile/field/checkbox/define.class.php');
 
     if ($DB->count_records('user_info_category', array('name' => get_string('gitlab', 'local_integrate_autograding_system'))) == 0) {
-        $categoryform = new category_form();
-
         $data = new \stdClass();
         $data->sortorder = $DB->count_records('user_info_category') + 1;
         $data->name = get_string('gitlab', 'local_integrate_autograding_system');
@@ -88,6 +82,7 @@ function local_integrate_autograding_system_after_config() {
             'forceunique' => 0,
             'visible' => 2,
             'locked' => 1,
+            'defaultdata' => '-',
             'param1' => 30,
             'param2' => 2048,
         ];
