@@ -26,4 +26,4 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_integrate_autograding_system';
 $plugin->version = 2022061500;
-$plugin->requires = 2020061500;
+$plugin->requires = 2021051700;
