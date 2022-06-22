@@ -26,7 +26,6 @@ use core_user\output\myprofile\tree;
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/user/profile/index_category_form.php');
 require_once($CFG->dirroot . '/user/profile/definelib.php');
 require_once($CFG->dirroot . '/user/profile/field/text/define.class.php');
 require_once($CFG->dirroot . '/user/profile/field/checkbox/define.class.php');
