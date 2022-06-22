@@ -65,8 +65,9 @@ function local_integrate_autograding_system_myprofile_navigation(tree $tree, $us
 }
 
 function local_integrate_autograding_system_after_config() {
-    global $DB, $CFG;
+    global $DB;
 
+    // Add gitlab profile field
     if (!$DB->record_exists('user_info_category', array('name' => get_string('gitlab', 'local_integrate_autograding_system')))) {
         $data = new \stdClass();
         $data->sortorder = $DB->count_records('user_info_category') + 1;
@@ -110,9 +111,12 @@ function local_integrate_autograding_system_after_config() {
         $profileclass->define_save($data);
     }
 
-    if (!$DB->record_exists('external_services', array('shortname' => get_string('servicename', 'local_integrate_autograding_system')))) {
-        $webservicemanager = new \webservice();
+    // Add external service
+    $webservicemanager = new \webservice();
 
+    $service = $DB->get_record('external_services', array('shortname' => get_string('servicename', 'local_integrate_autograding_system')));
+    $serviceid = -1;
+    if (empty($service)) {
         $data = (object) [
             'shortname' => get_string('servicename', 'local_integrate_autograding_system'),
             'name' => get_string('servicenamedesc', 'local_integrate_autograding_system'),
@@ -122,8 +126,13 @@ function local_integrate_autograding_system_after_config() {
             'downloadfiles' => 0,
             'uploadfiles' => 0,
         ];
-        $serviceid = $webservicemanager->add_external_service($data);
 
+        $serviceid = $webservicemanager->add_external_service($data);
+    } else {
+        $serviceid = $service->id;
+    }
+
+    if (!$webservicemanager->service_function_exists('core_user_update_users', $serviceid)) {
         $webservicemanager->add_external_function_to_service('core_user_update_users', $serviceid);
     }
 }
