@@ -63,6 +63,31 @@ function local_integrate_autograding_system_myprofile_navigation(tree $tree, $us
     return true;
 }
 
+/**
+ * Add Autograders to Navigation.
+ *
+ * @param global_navigation $nav The myprofile tree to add categories and nodes to.
+ */
+function local_integrate_autograding_system_extend_navigation(global_navigation $nav) {
+    // admin only
+    if (!has_capability('moodle/site:config', context_system::instance())) {
+        return;
+    }
+
+    $main_node = $nav->add('Autograders', '/local/integrate_autograding_system/manage.php');
+    $main_node->nodetype = 1;
+    $main_node->collapse = false;
+    $main_node->forceopen = true;
+    $main_node->isexpandable = false;
+    $main_node->showinflatnavigation = true;
+}
+
+
+/**
+ * Add Plugin configs.
+ *
+ * @param global_navigation $nav The myprofile tree to add categories and nodes to.
+ */
 function local_integrate_autograding_system_after_config() {
     global $DB;
 
