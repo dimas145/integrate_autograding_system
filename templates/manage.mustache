@@ -1,0 +1,51 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template local_integrate_autograding_system/autograder
+
+    Action menu item.
+
+    Example context (json):
+    {
+    }
+}}
+<h1>Autograders</h1>
+
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>RepoTag</th>
+            <th>Endpoint</th>
+            <th>Port</th>
+            <th>Description</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#autograders}}
+            <tr>
+                <th>{{name}}</th>
+                <th>{{repoTag}}</th>
+                <th>{{endpoint}}</th>
+                <th>{{port}}</th>
+                <th>{{description}}</th>
+                <th>{{status}}</th>
+            </tr>
+        {{/autograders}}
+    </tbody>
+</table>

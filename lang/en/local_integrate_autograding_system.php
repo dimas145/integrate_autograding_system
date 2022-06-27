@@ -33,5 +33,5 @@ $string['servicenamedesc'] = 'Moodle Integrate Autograding System Web Service';
 $string['manage'] = 'Manage Autograding System Integration';
 $string['bridgeserviceurl'] = 'Bridge Service url';
 
-$string['bridgeserviceurldefault'] = 'http://localhost:8085';
+$string['bridgeserviceurldefault'] = 'http://bridge-service:8085';
 $string['urltemplate'] = '{$a->url}{$a->endpoint}';
