@@ -36,7 +36,7 @@ $mform = new register_form();
 //Form processing and displaying is done here
 if ($mform->is_cancelled()) {
     // Handle form cancel operation, if cancel button is pressed, redirect to home
-    redirect($CFG->wwwroot, 'Autograder is not registered');
+    redirect(new moodle_url('/local/integrate_autograding_system/manage.php'), 'Autograder is not registered');
 } else if ($fromform = $mform->get_data()) {
     // Submit data to external system
     $config = get_config('local_integrate_autograding_system');
@@ -66,7 +66,7 @@ if ($mform->is_cancelled()) {
     $response_json = json_decode($response);
 
     // if ($response_json->success) {
-    redirect($CFG->wwwroot, 'Autograder is registered');
+    redirect(new moodle_url('/local/integrate_autograding_system/manage.php'), 'Autograder is registered');
     // TODO
     // }
 } else {

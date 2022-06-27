@@ -49,6 +49,7 @@ echo $OUTPUT->header();
 
 $template_context = (object) [
     'autograders' => array_values($response_json->autograders),
+    'register_url' => new moodle_url('/local/integrate_autograding_system/register.php'),
 ];
 echo $OUTPUT->render_from_template('local_integrate_autograding_system/manage', $template_context);
 
