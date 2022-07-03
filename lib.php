@@ -82,7 +82,6 @@ function local_integrate_autograding_system_extend_navigation(global_navigation 
     $main_node->showinflatnavigation = true;
 }
 
-
 /**
  * Add Plugin configs.
  *
@@ -168,6 +167,7 @@ function local_integrate_autograding_system_after_config() {
  * @param MoodleQuickForm $mform The actual form object (required to modify the form).
  */
 function local_integrate_autograding_system_coursemodule_standard_elements($formwrapper, $mform) {
+    $config = get_config('local_integrate_autograding_system');
     global $CFG;
 
     $modulename = $formwrapper->get_current()->modulename;
@@ -184,6 +184,44 @@ function local_integrate_autograding_system_coursemodule_standard_elements($form
                 'accepted_types' => '*', 'return_types' => FILE_INTERNAL | FILE_EXTERNAL
             )
         );
+
+        $grading_methods = array();
+        $grading_methods['MAXIMUM'] = 'Maximum';
+        $grading_methods['MINIMUM'] = 'Minimum';
+        $grading_methods['AVERAGE'] = 'Average';
+        $mform->addElement('select', 'gradingMethod', 'Grading Method', $grading_methods);
+        $mform->setDefault('gradingMethod', 'MAXIMUM');
+
+        $grading_priority = array();
+        $grading_priority['FIRST'] = 'First';
+        $grading_priority['LAST'] = 'Last';
+        $mform->addElement('select', 'gradingPriority', 'Grading Priority', $grading_priority);
+        $mform->setDefault('gradingPriority', 'FIRST');
+
+        $mform->addElement('text', 'timeLimit', 'Time Limit');
+        $mform->setType('timeLimit', PARAM_INT);
+        $mform->setDefault('timeLimit', 3000);
+
+        $curl = new curl();
+        $url = get_string(
+            'urltemplate',
+            'local_integrate_autograding_system',
+            [
+                'url' => $config->bridge_service_url,
+                'endpoint' => '/autograder/running'
+            ]
+        );
+        $curl->setHeader(array('Content-type: application/json'));
+        $curl->setHeader(array('Accept: application/json', 'Expect:'));
+        $response_json = json_decode($curl->get($url));
+
+        $autograders = array();
+        foreach ($response_json->autograders as $autograder) {
+            $autograders[$autograder] = $autograder;
+        }
+
+        $graders = $mform->addElement('select', 'autograders', 'Autograders', $autograders);
+        $graders->setMultiple(true);
     }
 }
 
@@ -197,17 +235,25 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
     $config = get_config('local_integrate_autograding_system');
     global $DB;
 
-    if (isset($data->codereference)) {
+    if (
+        isset($data->codereference) &&
+        isset($data->gradingMethod) &&
+        isset($data->gradingPriority) &&
+        isset($data->timeLimit) &&
+        isset($data->autograders)
+    ) { // only valid if all autograding data is set
+        $instance_id = $data->instance;
         $files_data = $DB->get_records('files', array('itemid' => $data->codereference));
-        $instance = $DB->get_record('course_modules', array('instance' => $data->instance));
+        $instance = $DB->get_record('course_modules', array('instance' => $instance_id));
 
+        // save code reference
         foreach ($files_data as $file_data) {
             if ($file_data->filename !== '.') {
                 $fs = get_file_storage();
                 $file = $fs->get_file_by_hash($file_data->pathnamehash);
                 $curl = new curl();
 
-                $prop = explode('.', $file->filename);
+                $prop = explode('.', $file_data->filename);
                 $filename = $prop[0];
                 $ex = '';
                 if (count($prop) > 1) {
@@ -222,24 +268,61 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
                         'endpoint' => '/moodle/saveReference'
                     ]
                 );
-                $data = array(
+                $payload = array(
                     'courseId' => $course->id,
                     'activityId' => $instance->module,
-                    'contentHash' => $file->contenthash,
+                    'contentHash' => $file_data->contenthash,
                     'extension' => $ex,
                     'filename' => $filename,
                     'rawContent' => base64_encode($file->get_content()),
                 );
-                $data_string = json_encode($data);
+                $payload_string = json_encode($payload);
                 $curl->setHeader(array('Content-type: application/json'));
                 $curl->setHeader(array('Accept: application/json', 'Expect:'));
-                $curl->post($url, $data_string);
+                $curl->post($url, $payload_string);
 
                 $file->delete();    // remove from moodle file system
             }
         }
 
+        // create gitlab repository
+        $curl = new curl();
+        $name = str_replace(' ', '-', $data->name);
+
+        $url = get_string(
+            'urltemplate',
+            'local_integrate_autograding_system',
+            [
+                'url' => $config->bridge_service_url,
+                'endpoint' => '/gitlab/createRepository'
+            ]
+        );
+        $payload = array(
+            'courseId' => $course->id,
+            'activityId' => $instance->module,
+            'name' => $name,
+            'instance' => $instance_id,
+            'gradingMethod' => $data->gradingMethod,
+            'gradingPriority' => $data->gradingPriority,
+            'timeLimit' => $data->timeLimit,
+            'dueDate' => $data->duedate,
+            'autograders' => $data->autograders,
+        );
+        $payload_string = json_encode($payload);
+
+        $curl->setHeader(array('Content-type: application/json'));
+        $curl->setHeader(array('Accept: application/json', 'Expect:'));
+        $response_json = json_decode($curl->post($url, $payload_string));
+
+        // if ($response_json->success) {
+        //     // TODO
+        // }
+
         unset($data->codereference);
+        unset($data->gradingMethod);
+        unset($data->gradingPriority);
+        unset($data->timeLimit);
+        unset($data->autograders);
     }
 
     return $data;
