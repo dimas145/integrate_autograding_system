@@ -160,3 +160,87 @@ function local_integrate_autograding_system_after_config() {
         $webservicemanager->add_external_function_to_service('core_user_update_users', $serviceid);
     }
 }
+
+/**
+ * Add custom form when creating assignment.
+ * 
+ * @param moodleform $formwrapper The moodle quickforms wrapper object.
+ * @param MoodleQuickForm $mform The actual form object (required to modify the form).
+ */
+function local_integrate_autograding_system_coursemodule_standard_elements($formwrapper, $mform) {
+    global $CFG;
+
+    $modulename = $formwrapper->get_current()->modulename;
+    if ($modulename == 'assign') {
+        $mform->addElement('header', 'exampleheader', get_string('autograding', 'local_integrate_autograding_system'));
+
+        $mform->addElement(
+            'filemanager',
+            'codereference',
+            get_string('codereference', 'local_integrate_autograding_system'),
+            null,
+            array(
+                'subdirs' => 0, 'maxbytes' => $CFG->maxbytes, 'areamaxbytes' => 10485760, 'maxfiles' => 50,
+                'accepted_types' => '*', 'return_types' => FILE_INTERNAL | FILE_EXTERNAL
+            )
+        );
+    }
+}
+
+/**
+ * Process data from submitted form
+ *
+ * @param stdClass $data
+ * @param stdClass $course
+ */
+function local_integrate_autograding_system_coursemodule_edit_post_actions($data, $course) {
+    $config = get_config('local_integrate_autograding_system');
+    global $DB;
+
+    if (isset($data->codereference)) {
+        $files_data = $DB->get_records('files', array('itemid' => $data->codereference));
+        $instance = $DB->get_record('course_modules', array('instance' => $data->instance));
+
+        foreach ($files_data as $file_data) {
+            if ($file_data->filename !== '.') {
+                $fs = get_file_storage();
+                $file = $fs->get_file_by_hash($file_data->pathnamehash);
+                $curl = new curl();
+
+                $prop = explode('.', $file->filename);
+                $filename = $prop[0];
+                $ex = '';
+                if (count($prop) > 1) {
+                    $ex = $prop[1];
+                }
+
+                $url = get_string(
+                    'urltemplate',
+                    'local_integrate_autograding_system',
+                    [
+                        'url' => $config->bridge_service_url,
+                        'endpoint' => '/moodle/saveReference'
+                    ]
+                );
+                $data = array(
+                    'courseId' => $course->id,
+                    'activityId' => $instance->module,
+                    'contentHash' => $file->contenthash,
+                    'extension' => $ex,
+                    'filename' => $filename,
+                    'rawContent' => base64_encode($file->get_content()),
+                );
+                $data_string = json_encode($data);
+                $curl->setHeader(array('Content-type: application/json'));
+                $curl->setHeader(array('Accept: application/json', 'Expect:'));
+                $curl->post($url, $data_string);
+
+                $file->delete();    // remove from moodle file system
+            }
+        }
+
+        unset($data->codereference);
+    }
+
+    return $data;
+}

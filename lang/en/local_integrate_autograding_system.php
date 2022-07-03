@@ -31,6 +31,8 @@ $string['isgitlabverifieddesc'] = 'GitLab Verified';
 $string['servicename'] = 'integrate_autograding_system';
 $string['servicenamedesc'] = 'Moodle Integrate Autograding System Web Service';
 $string['manage'] = 'Manage Autograding System Integration';
+$string['autograding'] = 'Autograding';
+$string['codereference'] = 'Code References';
 $string['bridgeserviceurl'] = 'Bridge Service url';
 
 $string['bridgeserviceurldefault'] = 'http://bridge-service:8085';
