@@ -158,6 +158,10 @@ function local_integrate_autograding_system_after_config() {
     if (!$webservicemanager->service_function_exists('core_user_update_users', $serviceid)) {
         $webservicemanager->add_external_function_to_service('core_user_update_users', $serviceid);
     }
+
+    if (!$webservicemanager->service_function_exists('core_grades_update_grades', $serviceid)) {
+        $webservicemanager->add_external_function_to_service('core_grades_update_grades', $serviceid);
+    }
 }
 
 /**
