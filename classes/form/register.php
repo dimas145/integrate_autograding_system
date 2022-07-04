@@ -25,40 +25,42 @@
 require_once("$CFG->libdir/formslib.php");
 
 class register_form extends moodleform {
-    //Add elements to form
+    // Add elements to form
     public function definition() {
-        global $CFG;
-
         $mform = $this->_form; // Don't forget the underscore! 
 
-        $mform->addElement('text', 'username', 'Docker User Name'); // Add elements to your form.
-        $mform->setType('username', PARAM_TEXT);                   // Set type of element.
-        $mform->setDefault('username', '');        // Default value.
+        $mform->addElement('text', 'username', 'Docker User Name');             // Add elements to your form.
+        $mform->setType('username', PARAM_TEXT);                                // Set type of element.
+        $mform->setDefault('username', '');
+        $mform->addRule('username', get_string('required'), 'required');
 
-        $mform->addElement('text', 'repo_name', 'Docker Repository Name'); // Add elements to your form.
-        $mform->setType('repo_name', PARAM_TEXT);                   // Set type of element.
-        $mform->setDefault('repo_name', '');        // Default value.
+        $mform->addElement('text', 'repo_name', 'Docker Repository Name');
+        $mform->setType('repo_name', PARAM_TEXT);
+        $mform->addRule('repo_name', get_string('required'), 'required');
 
-        $mform->addElement('text', 'tag', 'Docker Repository Tag'); // Add elements to your form.
-        $mform->setType('tag', PARAM_TEXT);                   // Set type of element.
-        $mform->setDefault('tag', 'latest');        // Default value.
+        $mform->addElement('text', 'tag', 'Docker Repository Tag');
+        $mform->setType('tag', PARAM_TEXT);
+        $mform->setDefault('tag', 'latest');                                    // Default value.
 
-        $mform->addElement('text', 'port', 'Autograder running port'); // Add elements to your form.
-        $mform->setType('port', PARAM_INT);                   // Set type of element.
-        $mform->setDefault('port', '5000');        // Default value.
+        $mform->addElement('text', 'name', 'Autograder Displayed Name');
+        $mform->setType('name', PARAM_TEXT);
+        $mform->addRule('name', get_string('required'), 'required');
 
-        $mform->addElement('text', 'endpoint', 'Autograder grading endpoint'); // Add elements to your form.
-        $mform->setType('endpoint', PARAM_TEXT);                   // Set type of element.
-        $mform->setDefault('endpoint', '/grade');        // Default value.
+        $mform->addElement('text', 'port', 'Autograder Running Port');
+        $mform->setType('port', PARAM_INT);
+        $mform->setDefault('port', '5000');
 
-        $mform->addElement('text', 'description', 'Autograder description'); // Add elements to your form.
-        $mform->setType('description', PARAM_TEXT);                   // Set type of element.
-        $mform->setDefault('description', '');        // Default value.
+        $mform->addElement('text', 'endpoint', 'Autograder Grading Endpoint');
+        $mform->setType('endpoint', PARAM_TEXT);
+        $mform->setDefault('endpoint', '/grade');
+
+        $mform->addElement('text', 'description', 'Autograder Description');
+        $mform->setType('description', PARAM_TEXT);
 
         $this->add_action_buttons();
     }
 
-    //Custom validation should be added here
+    // Custom validation should be added here
     function validation($data, $files) {
         return array();
     }
