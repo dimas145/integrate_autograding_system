@@ -244,7 +244,9 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
         isset($data->gradingMethod) &&
         isset($data->gradingPriority) &&
         isset($data->timeLimit) &&
-        isset($data->autograders)
+        isset($data->autograders) &&
+        count($data->codereference) > 0 &&
+        count($data->autograders) > 0
     ) { // only valid if all autograding data is set
         $instance_id = $data->instance;
         $files_data = $DB->get_records('files', array('itemid' => $data->codereference));
