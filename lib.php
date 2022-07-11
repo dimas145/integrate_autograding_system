@@ -252,6 +252,39 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
         $files_data = $DB->get_records('files', array('itemid' => $data->codereference));
         $instance = $DB->get_record('course_modules', array('instance' => $instance_id));
 
+        // create gitlab repository
+        $curl = new curl();
+        $name = str_replace(' ', '-', $data->name);
+
+        $url = get_string(
+            'urltemplate',
+            'local_integrate_autograding_system',
+            [
+                'url' => $config->bridge_service_url,
+                'endpoint' => '/gitlab/createRepository'
+            ]
+        );
+        $payload = array(
+            'courseId' => $course->id,
+            'activityId' => $instance->module,
+            'name' => $name,
+            'instance' => $instance_id,
+            'gradingMethod' => $data->gradingMethod,
+            'gradingPriority' => $data->gradingPriority,
+            'timeLimit' => $data->timeLimit,
+            'dueDate' => $data->duedate,
+            'autograders' => $data->autograders,
+        );
+        $payload_string = json_encode($payload);
+
+        $curl->setHeader(array('Content-type: application/json'));
+        $curl->setHeader(array('Accept: application/json', 'Expect:'));
+        $response_json = json_decode($curl->post($url, $payload_string));
+
+        // if ($response_json->success) {
+        //     // TODO
+        // }
+
         // save code reference
         foreach ($files_data as $file_data) {
             if ($file_data->filename !== '.') {
@@ -290,39 +323,6 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
                 $file->delete();    // remove from moodle file system
             }
         }
-
-        // create gitlab repository
-        $curl = new curl();
-        $name = str_replace(' ', '-', $data->name);
-
-        $url = get_string(
-            'urltemplate',
-            'local_integrate_autograding_system',
-            [
-                'url' => $config->bridge_service_url,
-                'endpoint' => '/gitlab/createRepository'
-            ]
-        );
-        $payload = array(
-            'courseId' => $course->id,
-            'activityId' => $instance->module,
-            'name' => $name,
-            'instance' => $instance_id,
-            'gradingMethod' => $data->gradingMethod,
-            'gradingPriority' => $data->gradingPriority,
-            'timeLimit' => $data->timeLimit,
-            'dueDate' => $data->duedate,
-            'autograders' => $data->autograders,
-        );
-        $payload_string = json_encode($payload);
-
-        $curl->setHeader(array('Content-type: application/json'));
-        $curl->setHeader(array('Accept: application/json', 'Expect:'));
-        $response_json = json_decode($curl->post($url, $payload_string));
-
-        // if ($response_json->success) {
-        //     // TODO
-        // }
 
         unset($data->codereference);
         unset($data->gradingMethod);
