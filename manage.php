@@ -25,6 +25,7 @@
 require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
 
+require_login();
 $PAGE->set_url(new moodle_url('/local/integrate_autograding_system/manage.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Manage Autograder');

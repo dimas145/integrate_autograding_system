@@ -26,6 +26,7 @@ require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir . '/filelib.php');
 require_once($CFG->dirroot . '/local/integrate_autograding_system/classes/form/register.php');
 
+require_login();
 $PAGE->set_url(new moodle_url('/local/integrate_autograding_system/register.php'));
 $PAGE->set_context(\context_system::instance());
 $PAGE->set_title('Register Autograder');
