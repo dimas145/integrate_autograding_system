@@ -245,12 +245,10 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
         isset($data->gradingPriority) &&
         isset($data->timeLimit) &&
         isset($data->autograders) &&
-        count($data->codereference) > 0 &&
-        count($data->autograders) > 0
+        count($data->autograders) > 0 &&
+        ($data->modulename === 'assign')
     ) { // only valid if all autograding data is set
-        $instance_id = $data->instance;
         $files_data = $DB->get_records('files', array('itemid' => $data->codereference));
-        $instance = $DB->get_record('course_modules', array('instance' => $instance_id));
 
         // create gitlab repository
         $curl = new curl();
@@ -266,9 +264,9 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
         );
         $payload = array(
             'courseId' => $course->id,
-            'activityId' => $instance->module,
+            'activityId' => $data->coursemodule,
             'name' => $name,
-            'instance' => $instance_id,
+            'instance' => $data->instance,
             'gradingMethod' => $data->gradingMethod,
             'gradingPriority' => $data->gradingPriority,
             'timeLimit' => $data->timeLimit,
@@ -309,7 +307,7 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
                 );
                 $payload = array(
                     'courseId' => $course->id,
-                    'activityId' => $instance->module,
+                    'activityId' => $data->coursemodule,
                     'contentHash' => $file_data->contenthash,
                     'extension' => $ex,
                     'filename' => $filename,
