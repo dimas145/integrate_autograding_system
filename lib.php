@@ -266,7 +266,6 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
             'courseId' => $course->id,
             'activityId' => $data->coursemodule,
             'name' => $name,
-            'instance' => $data->instance,
             'gradingMethod' => $data->gradingMethod,
             'gradingPriority' => $data->gradingPriority,
             'timeLimit' => $data->timeLimit,
