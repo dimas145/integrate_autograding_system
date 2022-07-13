@@ -264,7 +264,7 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
         );
         $payload = array(
             'courseId' => $course->id,
-            'activityId' => $data->coursemodule,
+            'assignmentId' => $data->instance,
             'name' => $name,
             'gradingMethod' => $data->gradingMethod,
             'gradingPriority' => $data->gradingPriority,
@@ -306,7 +306,7 @@ function local_integrate_autograding_system_coursemodule_edit_post_actions($data
                 );
                 $payload = array(
                     'courseId' => $course->id,
-                    'activityId' => $data->coursemodule,
+                    'assignmentId' => $data->instance,
                     'contentHash' => $file_data->contenthash,
                     'extension' => $ex,
                     'filename' => $filename,
