@@ -34,17 +34,17 @@ class register_form extends moodleform {
         $mform->setDefault('username', '');
         $mform->addRule('username', get_string('required'), 'required');
 
-        $mform->addElement('text', 'repo_name', 'Docker Repository Name');
-        $mform->setType('repo_name', PARAM_TEXT);
-        $mform->addRule('repo_name', get_string('required'), 'required');
+        $mform->addElement('text', 'name', 'Docker Repository Name');
+        $mform->setType('name', PARAM_TEXT);
+        $mform->addRule('name', get_string('required'), 'required');
 
         $mform->addElement('text', 'tag', 'Docker Repository Tag');
         $mform->setType('tag', PARAM_TEXT);
         $mform->setDefault('tag', 'latest');                                    // Default value.
 
-        $mform->addElement('text', 'name', 'Autograder Displayed Name');
-        $mform->setType('name', PARAM_TEXT);
-        $mform->addRule('name', get_string('required'), 'required');
+        $mform->addElement('text', 'displayedName', 'Autograder Displayed name');
+        $mform->setType('displayedName', PARAM_TEXT);
+        $mform->addRule('displayedName', get_string('required'), 'required');
 
         $mform->addElement('text', 'port', 'Autograder Running Port');
         $mform->setType('port', PARAM_INT);

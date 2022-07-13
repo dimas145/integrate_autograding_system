@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version metadata for the plugintype_pluginname plugin.
+ * Register autograder page
  *
  * @package   local_integrate_autograding_system
  * @copyright 2022, Dimas 13518069@std.stei.itb.ac.id
@@ -53,8 +53,9 @@ if ($mform->is_cancelled()) {
     );
     $data = array(
         'dockerUser' => $fromform->username,
-        'repositoryName' => $fromform->repo_name,
+        'name' => $fromform->name,
         'gradingEndpoint' => $fromform->endpoint,
+        'displayedName' => $fromform->displayedName,
         'graderPort' => $fromform->port,
         'tag' => $fromform->tag,
         'description' => $fromform->description,
@@ -66,13 +67,11 @@ if ($mform->is_cancelled()) {
     $response = $curl->post($url, $data_string);
     $response_json = json_decode($response);
 
-    // if ($response_json->success) {
-    redirect(new moodle_url('/local/integrate_autograding_system/manage.php'), 'Autograder is registered');
-    // TODO
-    // }
-} else {
-    // this branch is executed if the form is submitted but the data doesn't validate and the form should be redisplayed
-    // or on the first display of the form.
+    if ($response_json->success) {
+        redirect(new moodle_url('/local/integrate_autograding_system/manage.php'), 'Autograder is registered');
+    } else {
+        redirect(new moodle_url('/local/integrate_autograding_system/manage.php'), 'Error');
+    }
 }
 
 echo $OUTPUT->header();
