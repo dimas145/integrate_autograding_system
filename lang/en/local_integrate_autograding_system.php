@@ -34,6 +34,5 @@ $string['manage'] = 'Manage Autograding System Integration';
 $string['autograding'] = 'Autograding';
 $string['codereference'] = 'Code References';
 $string['bridgeserviceurl'] = 'Bridge Service url';
-
 $string['bridgeserviceurldefault'] = 'http://advanced-autograder.my.id:8085';
 $string['urltemplate'] = '{$a->url}{$a->endpoint}';

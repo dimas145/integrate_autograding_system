@@ -159,8 +159,8 @@ function local_integrate_autograding_system_after_config() {
         $webservicemanager->add_external_function_to_service('core_user_update_users', $serviceid);
     }
 
-    if (!$webservicemanager->service_function_exists('core_grades_update_grades', $serviceid)) {
-        $webservicemanager->add_external_function_to_service('core_grades_update_grades', $serviceid);
+    if (!$webservicemanager->service_function_exists('mod_assign_save_grade', $serviceid)) {
+        $webservicemanager->add_external_function_to_service('mod_assign_save_grade', $serviceid);
     }
 }
 
