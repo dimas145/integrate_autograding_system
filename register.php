@@ -54,9 +54,9 @@ if ($mform->is_cancelled()) {
     $data = array(
         'dockerUser' => $fromform->username,
         'name' => $fromform->name,
-        'gradingEndpoint' => $fromform->endpoint,
         'displayedName' => $fromform->displayedName,
-        'graderPort' => $fromform->port,
+        'port' => $fromform->port,
+        'endpoint' => $fromform->endpoint,
         'tag' => $fromform->tag,
         'description' => $fromform->description,
     );
