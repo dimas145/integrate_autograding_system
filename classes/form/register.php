@@ -48,6 +48,7 @@ class register_form extends moodleform {
 
         $mform->addElement('text', 'description', 'Autograder Description');
         $mform->setType('description', PARAM_TEXT);
+        $mform->addRule('description', get_string('required'), 'required');
 
         $this->add_action_buttons();
     }
