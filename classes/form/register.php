@@ -46,14 +46,6 @@ class register_form extends moodleform {
         $mform->setType('displayedName', PARAM_TEXT);
         $mform->addRule('displayedName', get_string('required'), 'required');
 
-        $mform->addElement('text', 'port', 'Autograder Running Port');
-        $mform->setType('port', PARAM_INT);
-        $mform->setDefault('port', '5000');
-
-        $mform->addElement('text', 'endpoint', 'Autograder Grading Endpoint');
-        $mform->setType('endpoint', PARAM_TEXT);
-        $mform->setDefault('endpoint', '/grade');
-
         $mform->addElement('text', 'description', 'Autograder Description');
         $mform->setType('description', PARAM_TEXT);
 

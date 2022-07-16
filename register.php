@@ -55,8 +55,6 @@ if ($mform->is_cancelled()) {
         'dockerUser' => $fromform->username,
         'name' => $fromform->name,
         'displayedName' => $fromform->displayedName,
-        'port' => $fromform->port,
-        'endpoint' => $fromform->endpoint,
         'tag' => $fromform->tag,
         'description' => $fromform->description,
     );
